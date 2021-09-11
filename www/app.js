@@ -23,6 +23,7 @@ Vue.createApp({
 	      tomorrow: dateTomorrow.toLocaleDateString()
 	    },
 	    tasks: [],
+	    taskToRemove:'',
 	    task_entry: ''
 	  }
 	},
@@ -67,10 +68,12 @@ Vue.createApp({
 	  },
   },
 	methods: {
+	  closeDialog() {
+	    this.dialog.hide();
+	  },
 	  moveTask(event) {
 	    this.choosenTask = event.currentTarget.textContent
-	    event.currentTarget.remove()
-	  	this.removeTask(this.choosenTask)
+	    this.taskToRemove = event.currentTarget
 	    this.dialog.show()
 	  },
 	  moveTaskToToday() {
@@ -78,6 +81,7 @@ Vue.createApp({
 	      'description':this.choosenTask,
 	      'date': this.dates.today
 	    })
+	    this.removeTask(this.choosenTask)
 	    this.dialog.hide()
 	  },
 	  moveTaskToTomorrow() {
@@ -85,7 +89,7 @@ Vue.createApp({
 	      'description':this.choosenTask,
 	      'date': this.dates.tomorrow
 	    })
-
+	    this.removeTask(this.choosenTask)
 	    this.dialog.hide()
 	  },
 	  addTask(type) {
@@ -117,6 +121,7 @@ Vue.createApp({
 	          this.tasks.splice(idx,1)
 	        }
 	      })
+	    this.taskToRemove.remove()
 	  },
 	  finishTask(event){
 	    //Verwijder
