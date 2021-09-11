@@ -1,6 +1,6 @@
 {
     "name": "autismplanner.nicktelindert",
-    "description": "A planning app designed for people with ASS",
+    "description": "A simple planning app designed to be more autism friendly",
     "architecture": "@CLICK_ARCH@",
     "title": "Autism Planner",
     "hooks": {
