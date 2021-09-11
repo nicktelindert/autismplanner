@@ -11,6 +11,8 @@ const dateTomorrow = new Date().addDays(1)
 Vue.createApp({
 	data() {
 	  return {
+	    choosenTask:"",
+	    dialog:'',
 	    types: {
 	      today: "today",
 	      later: "later",
@@ -25,37 +27,16 @@ Vue.createApp({
 	  }
 	},
 	mounted() {
-	UI = new UbuntuUI()
-  UI.init();
+	  UI = new UbuntuUI()
+    UI.init();
+    this.dialog = UI.dialog("taskMoveDialog")
+
     if (localStorage.tasks) {
          this.tasks = JSON.parse(localStorage.tasks)
     }
   },
-	methods: {
-	  addTask(type) {
-	    if (this.task_entry !== '') {
-	      if (type == this.types.tomorrow) {
-	        this.tasks.push({
-	    	    'description':this.task_entry,
-	    	    'date': this.dates.tomorrow
-	    	  })
-	      } else if(type == this.types.today) {
-	    	  this.tasks.push({
-	    	    'description':this.task_entry,
-	    	    'date': this.dates.today
-	    	  })
-		    } else {
-	          this.tasks.push({
-	    	    'description':this.task_entry,
-	    	    'date': this.types.later
-	    	  })
-		    }
-		    localStorage.tasks = JSON.stringify(this.tasks)
-		    this.task_entry = ''
-	    }
-	
-	  },
-	  getTodayTasks() {
+  computed: {
+    getTodayTasks() {
 	    let tasksToday = []
 	    this.tasks.forEach( (val) => {
 	      if (val.date == this.dates.today) {
@@ -84,15 +65,65 @@ Vue.createApp({
 
 	    return tasksLater
 	  },
+  },
+	methods: {
+	  moveTask(event) {
+	    this.choosenTask = event.currentTarget.textContent
+	    event.currentTarget.remove()
+	  	this.removeTask(this.choosenTask)
+	    this.dialog.show()
+	  },
+	  moveTaskToToday() {
+	    this.tasks.push({
+	      'description':this.choosenTask,
+	      'date': this.dates.today
+	    })
+	    this.dialog.hide()
+	  },
+	  moveTaskToTomorrow() {
+	    this.tasks.push({
+	      'description':this.choosenTask,
+	      'date': this.dates.tomorrow
+	    })
+
+	    this.dialog.hide()
+	  },
+	  addTask(type) {
+	    if (this.task_entry !== '') {
+	      if (type == this.types.tomorrow) {
+	        this.tasks.push({
+	    	    'description':this.task_entry,
+	    	    'date': this.dates.tomorrow
+	    	  })
+	      } else if(type == this.types.today) {
+	    	  this.tasks.push({
+	    	    'description':this.task_entry,
+	    	    'date': this.dates.today
+	    	  })
+		    } else {
+	          this.tasks.push({
+	    	    'description':this.task_entry,
+	    	    'date': this.types.later
+	    	  })
+		    }
+		    localStorage.tasks = JSON.stringify(this.tasks)
+		    this.task_entry = ''
+	    }
+
+	  },
+	  removeTask(task) {
+	   this.tasks.forEach((val,idx) => {
+	        if (task == val.description) {
+	          this.tasks.splice(idx,1)
+	        }
+	      })
+	  },
 	  finishTask(event){
 	    //Verwijder
 	    if(event.target.getAttribute('class') == 'positive') {
 	      event.currentTarget.remove()
-	      this.tasks.forEach((val,idx) => {
-	        if (event.currentTarget.textContent == val.description) {
-	          this.tasks.splice(idx,1)
-	        }
-	      })
+	      this.removeTask(event.currentTarget.textContent)
+
 	    } else {
 	      event.target.setAttribute('class','positive')
 	    }
