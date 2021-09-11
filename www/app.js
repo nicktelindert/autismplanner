@@ -3,14 +3,19 @@ Date.prototype.addDays = function(days) {
   date.setDate(date.getDate() + days);
  return date;
 }
-    
+
 const date = new Date()
-const dateTomorrow = new Date().addDays(1);
+const dateTomorrow = new Date().addDays(1)
 
 
 Vue.createApp({
 	data() {
 	  return {
+	    types: {
+	      today: "today",
+	      later: "later",
+	      tomorrow: "tomorrow"
+	    },
 	    dates: {
 	      today: date.toLocaleDateString(),
 	      tomorrow: dateTomorrow.toLocaleDateString()
@@ -27,17 +32,22 @@ Vue.createApp({
     }
   },
 	methods: {
-	  addTask(today) {
+	  addTask(type) {
 	    if (this.task_entry !== '') {
-	      if (!today) {
+	      if (type == this.types.tomorrow) {
 	        this.tasks.push({
 	    	    'description':this.task_entry,
 	    	    'date': this.dates.tomorrow
 	    	  })
-	      } else {
+	      } else if(type == this.types.today) {
 	    	  this.tasks.push({
 	    	    'description':this.task_entry,
 	    	    'date': this.dates.today
+	    	  })
+		    } else {
+	          this.tasks.push({
+	    	    'description':this.task_entry,
+	    	    'date': this.types.later
 	    	  })
 		    }
 		    localStorage.tasks = JSON.stringify(this.tasks)
@@ -63,6 +73,16 @@ Vue.createApp({
 	    })
 	
 	    return tasksTomorrow
+	  },
+	  getLaterTasks() {
+	    let tasksLater = []
+	     this.tasks.forEach( (val) => {
+	      if (val.date == this.types.later) {
+	        tasksLater.push(val.description)
+	      }
+	    })
+
+	    return tasksLater
 	  },
 	  finishTask(event){
 	    //Verwijder

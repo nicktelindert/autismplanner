@@ -21,13 +21,14 @@
           <ul data-role="tabs">
             <li data-role="tabitem" data-page="today">Today</li>
             <li data-role="tabitem" data-page="tomorrow">Tomorrow</li>
+            <li data-role="tabitem" data-page="later">Later</li>
           </ul>
         </header>
         <div data-role="content">
             <div data-role="tab" id="today">
               <div class="space">
                  <input type="text" v-model="task_entry" placeholder="Task"/>
-                  <button data-role="button" class="positive space" @click='addTask(true)'>Add</button>
+                  <button data-role="button" class="positive space" @click='addTask("today")'>Add</button>
               </div>
               <div data-role="list" class="space">
                 <ul>
@@ -38,11 +39,24 @@
     
             </div>
             <div data-role="tab" id="tomorrow">
-              <input type="text" v-model="task_entry" placeholder="Taak"/>
-              <button data-role="button" class="positive" @click='addTask(false)'>Toevoegen</button>
+              <div class="space">
+                <input type="text" v-model="task_entry" placeholder="Taak"/>
+                <button data-role="button" class="positive space" @click='addTask("tomorrow")'>Add</button>
+              </div>
               <div data-role="list" class="space">
                 <ul>
                   <li v-for="task in getTomorrowTasks()" @click="finishTask"><p data-role="button" class="secondary">{{ task }}</p></li>
+                </ul>
+              </div>
+            </div>
+            <div data-role="tab" id="later">
+              <div class="space">
+                <input type="text" v-model="task_entry" placeholder="Taak"/>
+                <button data-role="button" class="positive space" @click='addTask("later")'>Add</button>
+              </div>
+              <div data-role="list" class="space">
+                <ul>
+                  <li v-for="task in getLaterTasks()" @click="finishTask"><p data-role="button" class="secondary">{{ task }}</p></li>
                 </ul>
               </div>
             </div>
