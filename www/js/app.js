@@ -102,7 +102,7 @@ Vue.createApp({
 	    if(this.tasks[this.choosenTask]) {
 	      let countBefore = this.tasks.length
 	      this.tasks.splice(this.choosenTask,1)
-	      if (tasks.length < countBefore) {
+	      if (this.tasks.length < countBefore) {
 	        localStorage.tasks = JSON.stringify(this.tasks)
 	        this.taskToRemove.remove()
 	      }
