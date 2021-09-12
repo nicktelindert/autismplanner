@@ -11,7 +11,7 @@ const dateTomorrow = new Date().addDays(1)
 Vue.createApp({
 	data() {
 	  return {
-	    choosenTask:'',
+	    choosenTask:0,
 	    moveTaskDialog:'',
 	    dates: {
 	      today: date.toLocaleDateString(),
