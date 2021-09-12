@@ -41,24 +41,32 @@ Vue.createApp({
 	  }
 	 },
 	 mounted() {
-	  this.UI = new UbuntuUI();
-    this.UI.init()
-    this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
+	  try {
+	    this.UI = new UbuntuUI();
+      this.UI.init()
+      this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
+	  } catch(e) {
+	  }
+
     if (localStorage.tasks) {
          this.tasks = JSON.parse(localStorage.tasks)
     }
 
-    this.$nextTick(function () {
-        UI.tabs.selectedTabIndex(0)
 
-     })
   },
 	methods: {
 	  getTasks(type) {
 	    let counterProp = `counter${type}`
 	  	let filterTasks = []
 	     this.tasks.forEach( (val, index) => {
-	      if (val.date == this.dates[type]) {
+	      //Fix old format
+	      if (!this.tasks[index].type) {
+	        this.tasks[index].type = type
+	        val.type = type
+	        localStorage.tasks = JSON.stringify(this.tasks)
+	      }
+
+	      if (val.type == type) {
 	        let done = false;
 	        if (val.done) {
 	          done = val.done
@@ -90,9 +98,10 @@ Vue.createApp({
 	    if (this.task_entry !== '') {
 	        this.tasks.push({
 	    	    'description':this.task_entry,
-	    	    'date': date
+	    	    'date': date,
+	    	    'type':type
 	    	  })
-
+	      this.updateCounter(type)
 		    localStorage.tasks = JSON.stringify(this.tasks)
 		    this.task_entry = ''
 	    }
@@ -100,15 +109,29 @@ Vue.createApp({
 	  },
 	  removeTask() {
 	    if(this.tasks[this.choosenTask]) {
-	      let countBefore = this.tasks.length
+	      const countBefore = this.tasks.length
+        const type = this.tasks[this.choosenTask].type
 	      this.tasks.splice(this.choosenTask,1)
+
 	      if (this.tasks.length < countBefore) {
-	        localStorage.tasks = JSON.stringify(this.tasks)
+	        this.updateCounter(type,true)
 	        this.taskToRemove.remove()
 	      }
 	    }
 
-	    this.moveTaskDialog.hide()
+	    if (this.moveTaskDialog) {
+	    	this.moveTaskDialog.hide()
+	    }
+
+	  },
+	  updateCounter(type, subtract) {
+	    let prop = `counter${type}`
+	    if (subtract) {
+	      this[prop]-=1
+	    } else {
+	      this[prop]+=1
+	    }
+
 	  },
 	  finishTask(event){
 	    if(event.target.getAttribute('class') == 'positive') {
@@ -119,10 +142,11 @@ Vue.createApp({
 	    } else {
 	      event.target.setAttribute('class','positive')
 	      this.tasks[event.target.getAttribute('data-item-id')].done = true
+
 	    }
-	    
-	    this.choosenTask = null
+
 	    localStorage.tasks = JSON.stringify(this.tasks)
+	    this.choosenTask = null
 	  }
 	}
 }).mount('#app')
