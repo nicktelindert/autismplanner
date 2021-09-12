@@ -42,7 +42,7 @@
                 <div data-role="tab" id="tomorrow" data-title="Tomorrow">
                     <input type="text" v-model="task_entry" placeholder="Task..."/>
                     <button data-role="button" class="positive space" @click='addTask("tomorrow")'>Add</button>
-                    <div data-role="list" class="space">
+                    <div data-role="list">
                         <ul>
                             <li v-for="task in getTasks('tomorrow')" @click="finishTask">
                                 <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="task.idx">{{ task.description }}</a>
@@ -53,10 +53,10 @@
                 <div data-role="tab" id="later" data-title="Later">
                     <input type="text" v-model="task_entry" placeholder="Task..."/>
                     <button data-role="button" class="positive space" @click='addTask("later")'>Add</button>
-                    <div data-role="list" class="space">
+                    <div data-role="list">
                         <ul>
-                            <li v-for="task in getTasks('later')" @click="moveTask">
-                                <a data-role="button" :data-item-id="task.idx" href="#taskMoveDialog" v-bind:class = "(task.done)?'positive':'secondary'">{{ task.description }}</a>
+                            <li v-for="task in getTasks('later')" @click="moveTaskShowDialog">
+                                <a data-role="button" :data-item-id="task.idx" href="#taskMoveDialog" v-bind:class="(task.done)?'positive':'secondary'">{{ task.description }}</a>
                             </li>
                         </ul>
                     </div>
@@ -67,9 +67,10 @@
                         <!-- this heading is optional -->
                         <p>To where should the task be moved?</p>
                         <menu>
-                            <button data-role="button" @click="moveTaskToToday">Today</button>
-                            <button data-role="button" @click="moveTaskToTomorrow">Tomorrow</button>
-                            <button data-role="button" class="negative" @click="closeDialog">Cancel</button>
+                            <button data-role="button" class="positive" @click="moveTask('today')">Today</button>
+                            <button data-role="button" @click="moveTask('tomorrow')">Tomorrow</button>
+                            <button data-role="button" class="negative" @click="removeTask">Remove</button>
+                            <button data-role="button" class="secondary" @click="closeDialog">Cancel</button>
                         </menu>
                     </section>
                 </div>

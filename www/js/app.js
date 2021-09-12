@@ -17,7 +17,7 @@ Vue.createApp({
 	    countertoday:0,
 	    countertomorrow:0,
 	    counterlater:0,
-	    choosenTask:0,
+	    choosenTask:null,
 	    moveTaskDialog:'',
 	    dates: {
 	      today: date.toLocaleDateString(),
@@ -31,13 +31,13 @@ Vue.createApp({
 	},
 	watch: {
 	  countertoday() {
-	    this.tabTitleToday = `${this.tabTitleToday}(${this.countertoday})`;
+	    this.tabTitleToday = `Today(${this.countertoday})`;
 	  },
 	   countertomorrow() {
-	    this.tabTitleTomorrow = `${this.tabTitleTomorrow}(${this.countertomorrow})`;
+	    this.tabTitleTomorrow = `Tomorrow(${this.countertomorrow})`
 	  },
 	  counterlater() {
-	    this.tabTitleLater = `${this.tabTitleLater}(${this.counterlater})`;
+	    this.tabTitleLater = `Later(${this.counterlater})`
 	  }
 	 },
 	 mounted() {
@@ -56,7 +56,6 @@ Vue.createApp({
 	methods: {
 	  getTasks(type) {
 	    let counterProp = `counter${type}`
-	    console.log(counterProp)
 	  	let filterTasks = []
 	     this.tasks.forEach( (val, index) => {
 	      if (val.date == this.dates[type]) {
@@ -75,27 +74,15 @@ Vue.createApp({
 	  closeDialog() {
 	    this.moveTaskDialog.hide();
 	  },
-	  moveTask(event) {
+	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
 	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
-	  moveTaskToToday() {
-	    const description = this.tasks[this.choosenTask].description
-	    this.tasks.push({
-	      'description':description,
-	      'date': this.dates.today
-	    })
-	    this.removeTask(this.choosenTask)
-	    this.moveTaskDialog.hide()
-	  },
-	  moveTaskToTomorrow() {
-	  	const description = this.tasks[this.choosenTask].description
-	    this.tasks.push({
-	      'description':description,
-	      'date': this.dates.tomorrow
-	    })
-	    this.removeTask(this.choosenTask)
+	  moveTask(type)  {
+	    this.tasks[this.choosenTask].date = this.dates[type];
+	    localStorage.tasks = JSON.stringify(this.tasks)
+	    this.choosenTask = null
 	    this.moveTaskDialog.hide()
 	  },
 	  addTask(type) {
@@ -111,15 +98,20 @@ Vue.createApp({
 	    }
 
 	  },
-	  removeTask(idx) {
-  	  this.tasks.splice(idx,1)
-	    this.taskToRemove.remove()
+	  removeTask() {
+	    if(this.tasks[this.choosenTask]) {
+	      this.tasks.splice(this.choosenTask,1)
+	      localStorage.tasks = JSON.stringify(this.tasks)
+	      this.taskToRemove.remove()
+	    }
+
+	    this.moveTaskDialog.hide()
 	  },
 	  finishTask(event){
-	    //Remove&nbsp;
 	    if(event.target.getAttribute('class') == 'positive') {
 	      this.taskToRemove = event.currentTarget
-	      this.removeTask(event.target.getAttribute('data-item-id'))
+	      this.choosenTask = event.target.getAttribute('data-item-id');
+	      this.removeTask()
 
 	    } else {
 	      event.target.setAttribute('class','positive')
