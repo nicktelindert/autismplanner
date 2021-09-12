@@ -35,7 +35,7 @@
                         <div data-role="list" class="space">
                             <ul>
                                 <li v-for="task in getTodayTasks" @click="finishTask">
-                                    <a data-role="button" class="secondary">{{ task }}</a>
+                                    <a data-role="button" :data-item-id="task.idx" class="secondary">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -50,7 +50,7 @@
                         <div data-role="list" class="space">
                             <ul>
                                 <li v-for="task in getTomorrowTasks" @click="finishTask">
-                                    <a data-role="button" class="secondary">{{ task }}</a>
+                                    <a data-role="button" :data-item-id="task.idx" class="secondary">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -65,7 +65,7 @@
                         <div data-role="list" class="space">
                             <ul>
                                 <li v-for="task in getLaterTasks" @click="moveTask">
-                                    <a data-role="button" href="#taskMoveDialog" class="secondary">{{ task }}</a>
+                                    <a data-role="button" :data-item-id="task.idx" href="#taskMoveDialog" class="secondary">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>

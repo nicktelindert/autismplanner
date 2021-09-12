@@ -35,18 +35,18 @@ Vue.createApp({
   computed: {
     getTodayTasks() {
 	    let tasksToday = []
-	    this.tasks.forEach( (val) => {
+	    this.tasks.forEach( (val,index) => {
 	      if (val.date == this.dates.today) {
-	        tasksToday.push(val.description)
+	        tasksToday.push({ description: val.description, idx: index})
 	      }
 	    })
 	    return tasksToday
 	  },
 	  getTomorrowTasks() {
 	    let tasksTomorrow = []
-	     this.tasks.forEach( (val) => {
+	     this.tasks.forEach( (val, index) => {
 	      if (val.date == this.dates.tomorrow) {
-	        tasksTomorrow.push(val.description)
+	        tasksTomorrow.push({ description: val.description, idx: index})
 	      }
 	    })
 	
@@ -54,9 +54,9 @@ Vue.createApp({
 	  },
 	  getLaterTasks() {
 	    let tasksLater = []
-	     this.tasks.forEach( (val) => {
+	     this.tasks.forEach( (val, index) => {
 	      if (val.date == this.dates.later) {
-	        tasksLater.push(val.description)
+	        tasksLater.push({ description: val.description, idx: index})
 	      }
 	    })
 
@@ -68,21 +68,23 @@ Vue.createApp({
 	    this.moveTaskDialog.hide();
 	  },
 	  moveTask(event) {
-	    this.choosenTask = event.currentTarget.textContent
+	    this.choosenTask = event.target.getAttribute('data-item-id')
 	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
 	  moveTaskToToday() {
+	    const description = this.tasks[this.choosenTask].description
 	    this.tasks.push({
-	      'description':this.choosenTask,
+	      'description':description,
 	      'date': this.dates.today
 	    })
 	    this.removeTask(this.choosenTask)
 	    this.moveTaskDialog.hide()
 	  },
 	  moveTaskToTomorrow() {
+	  	const description = this.tasks[this.choosenTask].description
 	    this.tasks.push({
-	      'description':this.choosenTask,
+	      'description':description,
 	      'date': this.dates.tomorrow
 	    })
 	    this.removeTask(this.choosenTask)
@@ -100,19 +102,15 @@ Vue.createApp({
 	    }
 
 	  },
-	  removeTask(task) {
-	   this.tasks.forEach((val,idx) => {
-	        if (task == val.description) {
-	          this.tasks.splice(idx,1)
-	        }
-	      })
+	  removeTask(idx) {
+  	  this.tasks.splice(idx,1)
 	    this.taskToRemove.remove()
 	  },
 	  finishTask(event){
 	    //Remove
 	    if(event.target.getAttribute('class') == 'positive') {
-	      event.currentTarget.remove()
-	      this.removeTask(event.currentTarget.textContent)
+	      this.taskToRemove = event.currentTarget
+	      this.removeTask(event.target.getAttribute('data-item-id'))
 
 	    } else {
 	      event.target.setAttribute('class','positive')
