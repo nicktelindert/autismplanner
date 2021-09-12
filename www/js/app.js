@@ -11,16 +11,12 @@ const dateTomorrow = new Date().addDays(1)
 Vue.createApp({
 	data() {
 	  return {
-	    choosenTask:"",
-	    dialog:'',
-	    types: {
-	      today: "today",
-	      later: "later",
-	      tomorrow: "tomorrow"
-	    },
+	    choosenTask:'',
+	    moveTaskDialog:'',
 	    dates: {
 	      today: date.toLocaleDateString(),
-	      tomorrow: dateTomorrow.toLocaleDateString()
+	      tomorrow: dateTomorrow.toLocaleDateString(),
+	      later: 'later',
 	    },
 	    tasks: [],
 	    taskToRemove:'',
@@ -30,7 +26,7 @@ Vue.createApp({
 	mounted() {
 	  UI = new UbuntuUI()
     UI.init();
-    this.dialog = UI.dialog("taskMoveDialog")
+    this.moveTaskDialog = UI.dialog('taskMoveDialog')
 
     if (localStorage.tasks) {
          this.tasks = JSON.parse(localStorage.tasks)
@@ -59,7 +55,7 @@ Vue.createApp({
 	  getLaterTasks() {
 	    let tasksLater = []
 	     this.tasks.forEach( (val) => {
-	      if (val.date == this.types.later) {
+	      if (val.date == this.dates.later) {
 	        tasksLater.push(val.description)
 	      }
 	    })
@@ -69,12 +65,12 @@ Vue.createApp({
   },
 	methods: {
 	  closeDialog() {
-	    this.dialog.hide();
+	    this.moveTaskDialog.hide();
 	  },
 	  moveTask(event) {
 	    this.choosenTask = event.currentTarget.textContent
 	    this.taskToRemove = event.currentTarget
-	    this.dialog.show()
+	    this.moveTaskDialog.show()
 	  },
 	  moveTaskToToday() {
 	    this.tasks.push({
@@ -82,7 +78,7 @@ Vue.createApp({
 	      'date': this.dates.today
 	    })
 	    this.removeTask(this.choosenTask)
-	    this.dialog.hide()
+	    this.moveTaskDialog.hide()
 	  },
 	  moveTaskToTomorrow() {
 	    this.tasks.push({
@@ -90,26 +86,16 @@ Vue.createApp({
 	      'date': this.dates.tomorrow
 	    })
 	    this.removeTask(this.choosenTask)
-	    this.dialog.hide()
+	    this.moveTaskDialog.hide()
 	  },
 	  addTask(type) {
+	    const date = this.dates[type]
+	    console.log(this.dates)
 	    if (this.task_entry !== '') {
-	      if (type == this.types.tomorrow) {
 	        this.tasks.push({
 	    	    'description':this.task_entry,
-	    	    'date': this.dates.tomorrow
+	    	    'date': date
 	    	  })
-	      } else if(type == this.types.today) {
-	    	  this.tasks.push({
-	    	    'description':this.task_entry,
-	    	    'date': this.dates.today
-	    	  })
-		    } else {
-	          this.tasks.push({
-	    	    'description':this.task_entry,
-	    	    'date': this.types.later
-	    	  })
-		    }
 		    localStorage.tasks = JSON.stringify(this.tasks)
 		    this.task_entry = ''
 	    }
@@ -124,7 +110,7 @@ Vue.createApp({
 	    this.taskToRemove.remove()
 	  },
 	  finishTask(event){
-	    //Verwijder
+	    //Remove
 	    if(event.target.getAttribute('class') == 'positive') {
 	      event.currentTarget.remove()
 	      this.removeTask(event.currentTarget.textContent)
