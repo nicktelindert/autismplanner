@@ -90,7 +90,6 @@ Vue.createApp({
 	  },
 	  addTask(type) {
 	    const date = this.dates[type]
-	    console.log(this.dates)
 	    if (this.task_entry !== '') {
 	        this.tasks.push({
 	    	    'description':this.task_entry,

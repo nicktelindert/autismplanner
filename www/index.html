@@ -35,7 +35,7 @@
                         <div data-role="list" class="space">
                             <ul>
                                 <li v-for="task in getTodayTasks" @click="finishTask">
-                                    <p data-role="button" class="secondary">{{ task }}</p>
+                                    <a data-role="button" class="secondary">{{ task }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -50,7 +50,7 @@
                         <div data-role="list" class="space">
                             <ul>
                                 <li v-for="task in getTomorrowTasks" @click="finishTask">
-                                    <p data-role="button" class="secondary">{{ task }}</p>
+                                    <a data-role="button" class="secondary">{{ task }}</a>
                                 </li>
                             </ul>
                         </div>
