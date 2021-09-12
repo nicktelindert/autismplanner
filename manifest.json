@@ -9,7 +9,7 @@
             "desktop":  "autismplanner.desktop"
         }
     },
-    "version": "1.2.4",
+    "version": "1.2.5",
     "maintainer": "Nick te Lindert <nicktelindert@protonmail.com>",
     "framework" : "ubuntu-sdk-16.04.5"
 }
