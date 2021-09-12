@@ -32,38 +32,21 @@ Vue.createApp({
          this.tasks = JSON.parse(localStorage.tasks)
     }
   },
-  computed: {
-    getTodayTasks() {
-	    let tasksToday = []
-	    this.tasks.forEach( (val,index) => {
-	      if (val.date == this.dates.today) {
-	        tasksToday.push({ description: val.description, idx: index})
-	      }
-	    })
-	    return tasksToday
-	  },
-	  getTomorrowTasks() {
-	    let tasksTomorrow = []
+	methods: {
+	  getTasks(type) {
+	  	let filterTasks = []
 	     this.tasks.forEach( (val, index) => {
-	      if (val.date == this.dates.tomorrow) {
-	        tasksTomorrow.push({ description: val.description, idx: index})
-	      }
-	    })
-	
-	    return tasksTomorrow
-	  },
-	  getLaterTasks() {
-	    let tasksLater = []
-	     this.tasks.forEach( (val, index) => {
-	      if (val.date == this.dates.later) {
-	        tasksLater.push({ description: val.description, idx: index})
+	      if (val.date == this.dates[type]) {
+	        let done = false;
+	        if (val.done) {
+	          done = val.done
+	        }
+	        filterTasks.push({ description: val.description, idx: index, done: done})
 	      }
 	    })
 
-	    return tasksLater
+	    return filterTasks
 	  },
-  },
-	methods: {
 	  closeDialog() {
 	    this.moveTaskDialog.hide();
 	  },
@@ -114,6 +97,8 @@ Vue.createApp({
 
 	    } else {
 	      event.target.setAttribute('class','positive')
+	      this.tasks[event.target.getAttribute('data-item-id')].done = true
+        console.log(this.tasks)
 	    }
 	    
 	    localStorage.tasks = JSON.stringify(this.tasks)

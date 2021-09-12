@@ -34,8 +34,8 @@
                         </div>
                         <div data-role="list" class="space">
                             <ul>
-                                <li v-for="task in getTodayTasks" @click="finishTask">
-                                    <a data-role="button" :data-item-id="task.idx" class="secondary">{{ task.description }}</a>
+                                <li v-for="task in getTasks('today')" @click="finishTask">
+                                    <a data-role="button" :data-item-id="task.idx" v-bind:class = "(task.done)?'positive':'secondary'">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -49,8 +49,8 @@
                         </div>
                         <div data-role="list" class="space">
                             <ul>
-                                <li v-for="task in getTomorrowTasks" @click="finishTask">
-                                    <a data-role="button" :data-item-id="task.idx" class="secondary">{{ task.description }}</a>
+                                <li v-for="task in getTasks('tomorrow')" @click="finishTask">
+                                    <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="task.idx">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -64,8 +64,8 @@
                         </div>
                         <div data-role="list" class="space">
                             <ul>
-                                <li v-for="task in getLaterTasks" @click="moveTask">
-                                    <a data-role="button" :data-item-id="task.idx" href="#taskMoveDialog" class="secondary">{{ task.description }}</a>
+                                <li v-for="task in getTasks('later')" @click="moveTask">
+                                    <a data-role="button" :data-item-id="task.idx" href="#taskMoveDialog" v-bind:class = "(task.done)?'positive':'secondary'">{{ task.description }}</a>
                                 </li>
                             </ul>
                         </div>
