@@ -52,7 +52,6 @@ Vue.createApp({
          this.tasks = JSON.parse(localStorage.tasks)
     }
 
-
   },
 	methods: {
 	  getTasks(type) {
@@ -76,7 +75,6 @@ Vue.createApp({
 	    })
 
 	    this[counterProp] = filterTasks.length;
-
 	    return filterTasks
 	  },
 	  closeDialog() {
