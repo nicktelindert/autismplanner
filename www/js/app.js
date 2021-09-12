@@ -25,7 +25,7 @@ Vue.createApp({
 	      later: 'later',
 	    },
 	    tasks: [],
-	    taskToRemove:'',
+	    taskToRemove:null,
 	    task_entry: ''
 	  }
 	},
@@ -100,9 +100,12 @@ Vue.createApp({
 	  },
 	  removeTask() {
 	    if(this.tasks[this.choosenTask]) {
+	      let countBefore = this.tasks.length
 	      this.tasks.splice(this.choosenTask,1)
-	      localStorage.tasks = JSON.stringify(this.tasks)
-	      this.taskToRemove.remove()
+	      if (tasks.length < countBefore) {
+	        localStorage.tasks = JSON.stringify(this.tasks)
+	        this.taskToRemove.remove()
+	      }
 	    }
 
 	    this.moveTaskDialog.hide()
@@ -118,6 +121,7 @@ Vue.createApp({
 	      this.tasks[event.target.getAttribute('data-item-id')].done = true
 	    }
 	    
+	    this.choosenTask = null
 	    localStorage.tasks = JSON.stringify(this.tasks)
 	  }
 	}
