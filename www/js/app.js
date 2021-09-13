@@ -58,14 +58,14 @@ Vue.createApp({
 	    let counterProp = `counter${type}`
 	  	let filterTasks = []
 	     this.tasks.forEach( (val, index) => {
-	      //Fix old format
-	      if (!this.tasks[index].type) {
-	        this.tasks[index].type = type
-	        val.type = type
-	        localStorage.tasks = JSON.stringify(this.tasks)
-	      }
 
 	      if (val.date == this.dates[type]) {
+	         //Fix old format
+	         if (!this.tasks[index].type || this.tasks[index].type !== type) {
+	          this.tasks[index].type = type
+	          val.type = type
+	          localStorage.tasks = JSON.stringify(this.tasks)
+	        }
 	        let done = false;
 	        if (val.done) {
 	          done = val.done
