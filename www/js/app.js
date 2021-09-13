@@ -65,7 +65,7 @@ Vue.createApp({
 	        localStorage.tasks = JSON.stringify(this.tasks)
 	      }
 
-	      if (val.type == type) {
+	      if (val.date == this.dates[type]) {
 	        let done = false;
 	        if (val.done) {
 	          done = val.done
