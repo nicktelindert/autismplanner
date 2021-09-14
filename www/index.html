@@ -30,11 +30,11 @@
               <div class="space">
                 <input type="text" v-model="task_entry" placeholder="Task..."/>
                 <button data-role="button" class="positive space" @click='addTask'>Add</button>
-                  <div data-role="tab" :id="type" :data-title.capitalize="type" style="display:block;">
+                  <div data-role="tab" :id="type" :data-title.capitalize="type" style="display: block;">
                       <div data-role="list">
                           <ul>
                             <span v-for="(task, idx) in tasks">
-                              <li   @click="finishTask" v-if="task.type==type">
+                              <li  @click="finishTask" v-if="task.type==type">
                                   <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="idx">{{ task.description  }}</a>
                               </li>
                             </span>

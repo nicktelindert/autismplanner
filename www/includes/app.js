@@ -25,6 +25,14 @@ Vue.createApp({
 	    task_entry: ''
 	  }
 	},
+  watch: {
+    type() {
+      this.$forceUpdate();
+    },
+    tasks() {
+      this.$forceUpdate();
+    }
+  },
 	 mounted() {
 
       this.UI = new UbuntuUI();
@@ -60,7 +68,6 @@ Vue.createApp({
 	  },
 	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
-	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
 	  moveTask(type)  {
@@ -87,10 +94,6 @@ Vue.createApp({
 	    if(this.tasks[this.choosenTask]) {
 	      const countBefore = this.tasks.length
 	      this.tasks.splice(this.choosenTask,1)
-
-	      if (this.tasks.length < countBefore) {
-	        this.taskToRemove.remove()
-	      }
 	    }
 
 	    if (this.moveTaskDialog) {
@@ -103,7 +106,6 @@ Vue.createApp({
         return this.moveTaskShowDialog(event)
       }
 	    if(event.target.getAttribute('class') == 'positive') {
-	      this.taskToRemove = event.currentTarget
 	      this.choosenTask = event.target.getAttribute('data-item-id');
 	      this.removeTask()
 
