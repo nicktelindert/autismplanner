@@ -11,6 +11,7 @@ Vue.createApp({
 	data() {
 	  return {
 	    UI: null,
+      types: ['today','tomorrow','later'],
 	    choosenTask:null,
 	    moveTaskDialog:'',
 	    dates: {
@@ -34,7 +35,6 @@ Vue.createApp({
          let task_list = JSON.parse(localStorage.tasks)
          task_list.forEach((item, i) => {
            if (item.date == this.dates.today) {
-             console.log('update')
              item.type = 'today'
            }
            if (item.date == this.dates.tomorrow) {
@@ -60,7 +60,6 @@ Vue.createApp({
 	  },
 	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
-      console.log(this.choosenTask)
 	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
@@ -100,6 +99,9 @@ Vue.createApp({
 
 	  },
 	  finishTask(event){
+      if(this.type == 'later') {
+        return this.moveTaskShowDialog(event)
+      }
 	    if(event.target.getAttribute('class') == 'positive') {
 	      this.taskToRemove = event.currentTarget
 	      this.choosenTask = event.target.getAttribute('data-item-id');

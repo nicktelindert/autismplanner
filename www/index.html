@@ -30,40 +30,17 @@
               <div class="space">
                 <input type="text" v-model="task_entry" placeholder="Task..."/>
                 <button data-role="button" class="positive space" @click='addTask'>Add</button>
-                <div data-role="tab" id="today" data-title="Today" style="display:block;">
-                    <div data-role="list">
-                        <ul>
-                          <span v-for="(task, idx) in tasks">
-                            <li   @click="finishTask" v-if="task.type=='today'">
-                                <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="idx">{{ task.description  }}</a>
-                            </li>
-                          </span>
-                        </ul>
-                    </div>
-                </div>
-
-                <div data-role="tab" id="tomorrow" data-title="Tomorrow">
-                    <div data-role="list">
-                        <ul>
-                          <span v-for="(task, idx) in tasks">
-                              <li   @click="finishTask" v-if="task.type=='tomorrow'">
-                                  <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="idx" >{{ task.description  }}</a>
+                  <div data-role="tab" :id="type" :data-title.capitalize="type">
+                      <div data-role="list">
+                          <ul>
+                            <span v-for="(task, idx) in tasks">
+                              <li   @click="finishTask" v-if="task.type==type">
+                                  <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="idx">{{ task.description  }}</a>
                               </li>
                             </span>
-
-                        </ul>
-                    </div>
-                </div>
-                <div data-role="tab" id="later" data-title="Later">
-                    <div data-role="list">
-                        <ul>
-                          <span v-for="(task, idx) in tasks">
-                            <li   @click="moveTaskShowDialog" v-if="task.type=='later'">
-                                <a data-role="button" v-bind:class = "(task.done)?'positive':'secondary'" :data-item-id="idx" >{{ task.description  }}</a>
-                            </li>
-                          </span>
-                        </ul>
-                    </div>
+                          </ul>
+                      </div>
+                  </div>
                 </div>
                 <div data-role="dialog" id="taskMoveDialog">
                     <section>
