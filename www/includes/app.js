@@ -11,12 +11,6 @@ Vue.createApp({
 	data() {
 	  return {
 	    UI: null,
-	    tabTitleToday: 'Today',
-	    tabTitleTomorrow: 'Tomorrow',
-	    tabTitleLater: 'Later',
-	    countertoday:0,
-	    countertomorrow:0,
-	    counterlater:0,
 	    choosenTask:null,
 	    moveTaskDialog:'',
 	    dates: {
@@ -24,74 +18,61 @@ Vue.createApp({
 	      tomorrow: dateTomorrow.toLocaleDateString(),
 	      later: 'later',
 	    },
+      type: 'today',
 	    tasks: [],
 	    taskToRemove:null,
 	    task_entry: ''
 	  }
 	},
-	watch: {
-	  countertoday() {
-	    this.tabTitleToday = `Today(${this.countertoday})`;
-	  },
-	   countertomorrow() {
-	    this.tabTitleTomorrow = `Tomorrow(${this.countertomorrow})`
-	  },
-	  counterlater() {
-	    this.tabTitleLater = `Later(${this.counterlater})`
-	  }
-	 },
 	 mounted() {
-	  try {
-	    this.UI = new UbuntuUI();
+
+      this.UI = new UbuntuUI();
       this.UI.init()
       this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
-	  } catch(e) {
-	  }
 
-    if (localStorage.tasks) {
-         this.tasks = JSON.parse(localStorage.tasks)
-    }
+      if (localStorage.tasks) {
+         let task_list = JSON.parse(localStorage.tasks)
+         task_list.forEach((item, i) => {
+           if (item.date == this.dates.today) {
+             console.log('update')
+             item.type = 'today'
+           }
+           if (item.date == this.dates.tomorrow) {
+             item.type = 'tomorrow'
+           }
+           if (item.date == this.dates.later) {
+             item.type = 'later'
+           }
+         });
+         localStorage.tasks = JSON.stringify(task_list)
+         this.tasks = task_list
 
+      }
   },
 	methods: {
-	  getTasks(type) {
-	    let counterProp = `counter${type}`
-	  	let filterTasks = []
-	     this.tasks.forEach( (val, index) => {
-
-	      if (val.date == this.dates[type]) {
-	         //Fix old format
-	         if (!this.tasks[index].type || this.tasks[index].type !== type) {
-	          this.tasks[index].type = type
-	          val.type = type
-	          localStorage.tasks = JSON.stringify(this.tasks)
-	        }
-	        let done = false;
-	        if (val.done) {
-	          done = val.done
-	        }
-	        filterTasks.push({ description: val.description, idx: index, done: done})
-	      }
-	    })
-
-	    this[counterProp] = filterTasks.length;
-	    return filterTasks
-	  },
+    setType(event) {
+      if (event.target.getAttribute('data-page')) {
+        this.type = event.target.getAttribute('data-page')
+      }
+    },
 	  closeDialog() {
 	    this.moveTaskDialog.hide();
 	  },
 	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
+      console.log(this.choosenTask)
 	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
 	  moveTask(type)  {
 	    this.tasks[this.choosenTask].date = this.dates[type];
+      this.tasks[this.choosenTask].type = type;
 	    localStorage.tasks = JSON.stringify(this.tasks)
 	    this.choosenTask = null
 	    this.moveTaskDialog.hide()
 	  },
-	  addTask(type) {
+	  addTask() {
+      const type = this.type
 	    const date = this.dates[type]
 	    if (this.task_entry !== '') {
 	        this.tasks.push({
@@ -99,35 +80,22 @@ Vue.createApp({
 	    	    'date': date,
 	    	    'type':type
 	    	  })
-	      this.updateCounter(type)
 		    localStorage.tasks = JSON.stringify(this.tasks)
 		    this.task_entry = ''
 	    }
-
 	  },
 	  removeTask() {
 	    if(this.tasks[this.choosenTask]) {
 	      const countBefore = this.tasks.length
-        const type = this.tasks[this.choosenTask].type
 	      this.tasks.splice(this.choosenTask,1)
 
 	      if (this.tasks.length < countBefore) {
-	        this.updateCounter(type,true)
 	        this.taskToRemove.remove()
 	      }
 	    }
 
 	    if (this.moveTaskDialog) {
 	    	this.moveTaskDialog.hide()
-	    }
-
-	  },
-	  updateCounter(type, subtract) {
-	    let prop = `counter${type}`
-	    if (subtract) {
-	      this[prop]-=1
-	    } else {
-	      this[prop]+=1
 	    }
 
 	  },
