@@ -94,12 +94,12 @@ Vue.createApp({
 	    if(this.tasks[this.choosenTask]) {
 	      const countBefore = this.tasks.length
 	      this.tasks.splice(this.choosenTask,1)
-	    }
+        localStorage.tasks = JSON.stringify(this.tasks)
+      }
 
 	    if (this.moveTaskDialog) {
 	    	this.moveTaskDialog.hide()
 	    }
-
 	  },
 	  finishTask(event){
       if(this.type == 'later') {
