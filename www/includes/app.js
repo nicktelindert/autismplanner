@@ -11,12 +11,7 @@ Vue.createApp({
 	data() {
 	  return {
 	    UI: null,
-	    tabTitleToday: 'Today',
-	    tabTitleTomorrow: 'Tomorrow',
-	    tabTitleLater: 'Later',
-	    countertoday:0,
-	    countertomorrow:0,
-	    counterlater:0,
+      types: ['today','tomorrow','later'],
 	    choosenTask:null,
 	    moveTaskDialog:'',
 	    dates: {
@@ -24,101 +19,104 @@ Vue.createApp({
 	      tomorrow: dateTomorrow.toLocaleDateString(),
 	      later: 'later',
 	    },
+      type: 'today',
 	    tasks: [],
-	    taskToRemove:'',
+	    taskToRemove:null,
 	    task_entry: ''
 	  }
 	},
-	watch: {
-	  countertoday() {
-	    this.tabTitleToday = `Today(${this.countertoday})`;
-	  },
-	   countertomorrow() {
-	    this.tabTitleTomorrow = `Tomorrow(${this.countertomorrow})`
-	  },
-	  counterlater() {
-	    this.tabTitleLater = `Later(${this.counterlater})`
-	  }
-	 },
-	 mounted() {
-	  this.UI = new UbuntuUI();
-    this.UI.init()
-    this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
-    if (localStorage.tasks) {
-         this.tasks = JSON.parse(localStorage.tasks)
+  watch: {
+    type() {
+      this.$forceUpdate();
+    },
+    tasks() {
+      this.$forceUpdate();
     }
+  },
+	 mounted() {
 
-    this.$nextTick(function () {
-        UI.tabs.selectedTabIndex(0)
+      this.UI = new UbuntuUI();
+      this.UI.init()
+      this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
 
-     })
+      if (localStorage.tasks) {
+         let task_list = JSON.parse(localStorage.tasks)
+         task_list.forEach((item, i) => {
+           if (item.date == this.dates.today) {
+             item.type = 'today'
+           }
+           if (item.date == this.dates.tomorrow) {
+             item.type = 'tomorrow'
+           }
+           if (item.date == this.dates.later) {
+             item.type = 'later'
+           }
+         });
+         localStorage.tasks = JSON.stringify(task_list)
+         this.tasks = task_list
+
+      }
   },
 	methods: {
-	  getTasks(type) {
-	    let counterProp = `counter${type}`
-	  	let filterTasks = []
-	     this.tasks.forEach( (val, index) => {
-	      if (val.date == this.dates[type]) {
-	        let done = false;
-	        if (val.done) {
-	          done = val.done
-	        }
-	        filterTasks.push({ description: val.description, idx: index, done: done})
-	      }
-	    })
-
-	    this[counterProp] = filterTasks.length;
-
-	    return filterTasks
-	  },
+    setType(event) {
+      if (event.target.getAttribute('data-page')) {
+        this.type = event.target.getAttribute('data-page')
+      }
+    },
 	  closeDialog() {
 	    this.moveTaskDialog.hide();
 	  },
 	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
-	    this.taskToRemove = event.currentTarget
 	    this.moveTaskDialog.show()
 	  },
 	  moveTask(type)  {
 	    this.tasks[this.choosenTask].date = this.dates[type];
+      this.tasks[this.choosenTask].type = type;
 	    localStorage.tasks = JSON.stringify(this.tasks)
 	    this.choosenTask = null
 	    this.moveTaskDialog.hide()
 	  },
-	  addTask(type) {
+	  addTask() {
+      const type = this.type
 	    const date = this.dates[type]
 	    if (this.task_entry !== '') {
 	        this.tasks.push({
 	    	    'description':this.task_entry,
-	    	    'date': date
+	    	    'date': date,
+	    	    'type':type
 	    	  })
-
 		    localStorage.tasks = JSON.stringify(this.tasks)
 		    this.task_entry = ''
 	    }
-
 	  },
 	  removeTask() {
 	    if(this.tasks[this.choosenTask]) {
+	      const countBefore = this.tasks.length
 	      this.tasks.splice(this.choosenTask,1)
-	      localStorage.tasks = JSON.stringify(this.tasks)
-	      this.taskToRemove.remove()
-	    }
+        localStorage.tasks = JSON.stringify(this.tasks)
+      }
 
-	    this.moveTaskDialog.hide()
+	    if (this.moveTaskDialog) {
+	    	this.moveTaskDialog.hide()
+	    }
 	  },
 	  finishTask(event){
+      if(this.type == 'later') {
+        return this.moveTaskShowDialog(event)
+      }
 	    if(event.target.getAttribute('class') == 'positive') {
-	      this.taskToRemove = event.currentTarget
 	      this.choosenTask = event.target.getAttribute('data-item-id');
 	      this.removeTask()
 
 	    } else {
 	      event.target.setAttribute('class','positive')
 	      this.tasks[event.target.getAttribute('data-item-id')].done = true
+
 	    }
-	    
+
 	    localStorage.tasks = JSON.stringify(this.tasks)
+	    this.choosenTask = null
 	  }
 	}
 }).mount('#app')
