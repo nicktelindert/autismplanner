@@ -13,7 +13,8 @@ Vue.createApp({
 	    UI: null,
       types: ['today','tomorrow','later'],
 	    choosenTask:null,
-	    moveTaskDialog:'',
+      classes: '',
+      moveTaskDialog:'taskMoveDialog',
 	    dates: {
 	      today: date.toLocaleDateString(),
 	      tomorrow: dateTomorrow.toLocaleDateString(),
@@ -34,11 +35,6 @@ Vue.createApp({
     }
   },
 	 mounted() {
-
-      this.UI = new UbuntuUI();
-      this.UI.init()
-      this.moveTaskDialog = this.UI.dialog('taskMoveDialog')
-
       if (localStorage.tasks) {
          let task_list = JSON.parse(localStorage.tasks)
          task_list.forEach((item, i) => {
@@ -58,9 +54,17 @@ Vue.createApp({
       }
   },
 	methods: {
+    showMenu() {
+      if (this.classes == '') {
+        this.classes = 'opened'
+      }else {
+        this.classes = ''
+      }
+    },
     setType(event) {
       if (event.target.getAttribute('data-page')) {
         this.type = event.target.getAttribute('data-page')
+        this.showMenu()
       }
     },
 	  closeDialog() {
@@ -68,7 +72,7 @@ Vue.createApp({
 	  },
 	  moveTaskShowDialog(event) {
 	    this.choosenTask = event.target.getAttribute('data-item-id')
-	    this.moveTaskDialog.show()
+	    document.getElementById("taskMoveDialog").setAttribute('class', 'active')
 	  },
 	  moveTask(type)  {
 	    this.tasks[this.choosenTask].date = this.dates[type];
@@ -96,10 +100,6 @@ Vue.createApp({
 	      this.tasks.splice(this.choosenTask,1)
         localStorage.tasks = JSON.stringify(this.tasks)
       }
-
-	    if (this.moveTaskDialog) {
-	    	this.moveTaskDialog.hide()
-	    }
 	  },
 	  finishTask(event){
       if(this.type == 'later') {
