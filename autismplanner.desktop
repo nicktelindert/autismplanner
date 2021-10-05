@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Autism Planner
-Exec=webapp-container --app-id="autismplanner.nicktelindert" $@ www/index.html
+Exec=webapp-container --app-id="autismplanner.nicktelindert" $@ dist/index.html
 Icon=assets/logo.svg
 Terminal=false
 Type=Application

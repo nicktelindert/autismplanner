@@ -1,0 +1,213 @@
+<template>
+  <div data-role="dialog" id="taskMoveDialog">
+    <section><h1>Move task</h1>
+      <!-- this heading is optional -->
+      <p>To where should the task be moved?</p>
+      <menu>
+        <button data-role="button" class="positive">Today</button>
+        <button data-role="button">Tomorrow</button>
+        <button data-role="button" class="negative">Remove</button>
+        <button data-role="button" class="secondary">Cancel</button>
+      </menu>
+    </section>
+  </div>
+</template>
+<script>
+export default {
+  name: 'Dialog',
+  props: {
+    title: String
+  },
+  data() {
+    return {
+      task:''
+    }
+  },
+  computed: {
+    list(){
+      return this.$store.state.tasks.filter(task => task.type == this.$store.state.currentList)
+    }
+  },
+  methods: {
+    addTask() {
+      const entry = this.task
+      this.$store.commit('addTask', entry)
+      this.task = ''
+    }
+  }
+}
+</script>
+<style scoped="true">
+[data-role="dialog"] {
+  background: #000;
+  opacity: 0.9;
+  overflow: hidden;
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  font-size: 0;
+  /* Using font-size: 0; we avoid the unwanted visual space (about 3px)
+  created by white-spaces and break lines in the code betewen inline-block elements */
+  color: #fff;
+  text-align: center;
+  height: 100%;
+  display: none;
+}
+[data-role="dialog"].active {
+  display: block;
+}
+[data-role="dialog"] > section {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+  color: #FAFAFA;
+  width: 100%;
+  display: inline-block;
+  /*overflow-y: scroll;*/
+  vertical-align: middle;
+  white-space: normal;
+}
+[data-role="dialog"]:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 0.1rem;
+  height: 100%;
+  margin-left: -0.1rem;
+}
+[data-role="dialog"] h1 {
+  font-size: 1.3rem;
+  line-height: 1.5em;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+[data-role="dialog"] p {
+  font-size: 0.9rem;
+  line-height: 1.8em;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+[data-role="dialog"] menu {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  white-space: nowrap;
+  margin: 0 auto;
+  margin-top: 1rem;
+  display: block;
+  text-align: center;
+}
+[data-role="dialog"] menu [data-role="button"] {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: 200px;
+}
+[data-role="dialog"] menu [data-role="button"]:last-child {
+  margin-bottom: 0;
+}
+
+/* Tablet */
+@media only screen and (min-width: 870px) {
+  [data-role="dialog"] {
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 1;
+  }
+  [data-role="dialog"] > section {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    width: 18.7rem;
+    padding: 1.8rem;
+  }
+  [data-role="dialog"] input[type="text"],
+  [data-role="dialog"] input[type="password"],
+  [data-role="dialog"] input[type="email"],
+  [data-role="dialog"] input[type="tel"],
+  [data-role="dialog"] input[type="search"],
+  [data-role="dialog"] input[type="url"],
+  [data-role="dialog"] input[type="number"] {
+    width: 14rem;
+  }
+  [data-role="dialog"] menu [data-role="button"] {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @keyframes shake {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+    10% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    20% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    30% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    40% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    50% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    60% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    70% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    80% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    90% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+  }
+  @-webkit-keyframes shake {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+    10% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    20% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    30% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    40% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    50% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    60% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    70% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    80% {
+      -webkit-transform: translate3d(20px, 0, 0);
+    }
+    90% {
+      -webkit-transform: translate3d(-20px, 0, 0);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+  }
+  .shake {
+    -webkit-animation: shakeIt .9s ease-in;
+    animation: shakeIt .9s ease-in;
+  }
+}
+</style>
