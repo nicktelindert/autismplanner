@@ -1,6 +1,12 @@
-# Autism Planner
+# Autism Planner(discontinued)
 
 A planning app designed for people with ASS
+
+## I discontinued the ubports app
+I tried to use ubports on several devices for years, but in the end i really have to conclude that ubports suffered from regressions almost every OTA and there seems to be a lack of testing all across the board. I tried a few devices that should be daily driver ready but at the end of the day the user experience is terrible and does not seem to improve at all. I know the ubports community is working and put their heart and soul in it but it seems like there is more work than people available to do the job. I wish them all the best and i really hope the transition to 20.04 fixes a lot of current issues. But for now i move on to something else. 
+
+## Maybe a sailfish app
+I don't consider android an option so i move to sailfish X because it seems to have improved a lot lately and has always been a lot more stable in the past. So i might consider a Sailfish app if i don't find an usable app. If there already is an usable app that fits my workflow i consider this project cancelled.
 
 ## Why?
 
